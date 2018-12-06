@@ -17,6 +17,13 @@ Contact* Node::getValue()
 	return this->contact;
 }
 
+int Node::setValue(std::string name, long phoneNumber)
+{
+	this->contact = new Contact(name, phoneNumber);
+	this->pNext = NULL;
+	return 1;
+}
+
 Contact::Contact()
 {
 	this->name = "NULL";
@@ -32,16 +39,8 @@ Contact::Contact(std::string name, long phoneNumber) {
 
 int Node::createNode(std::string name, long phoneNumber)
 {
-	Node* pNode = new Node;
-
-	if (!pNode) {
-		return -1;
-	}
-	else {
-		this->contact = new Contact(name, phoneNumber);
-		this->pNext = NULL;
-		return 0;
-	}
+	*this = Node(name, phoneNumber);
+	return 1;
 }
 
 void Node::printInfo()
@@ -55,9 +54,16 @@ Node* Node::getNextPointer()
 	return this->pNext;
 }
 
+void Node::setNextPointer(std::string name, long phoneNumber) {
+	this->pNext = new Node(name, phoneNumber);
+}
+
+
+
 int Node::setNextPointer(Node *pNext)
 {
 	this->pNext = pNext;
+	return 1;
 }
 
 Node::Node()
@@ -77,6 +83,8 @@ Node::Node(std::string name, long phoneNumber, Node* pNext)
 	this->contact = new Contact(name, phoneNumber);
 	this->pNext = pNext;
 }
+
+
 
 /*LinkedList class code block*/
 
@@ -158,6 +166,26 @@ Node* LinkedList::operator[](int index) {
 	return pTemp;
 }
 
+int LinkedList::addTail(std::string name, long phoneNumber) {
+	Node * pTemp = pHead;
+	while (pTemp->getNextPointer() != NULL) {
+		pTemp = pTemp->getNextPointer();
+	}
+	pTemp->setNextPointer(name, phoneNumber);
+	++size;
+	return 1;
+}
+
+Node * LinkedList::getHeadPointer()
+{
+	return this->pHead;
+}
+
+int LinkedList::getSize()
+{
+	return this->size;
+}
+
 LinkedList::LinkedList() {
 	pHead = NULL;
 	size = 0;
@@ -165,7 +193,25 @@ LinkedList::LinkedList() {
 
 /* Hash class code block */
 
+int Hash::hashFunction(long key)
+{
+	return key % 5;
+}
+
+Hash::Hash()
+{
+
+}
+
 int Hash::insert(std::string name, long phoneNumber)
 {
+	int hash{ hashFunction(phoneNumber) };
 	
+	if (this->hashTable[hash].getHeadPointer() == NULL) {
+		hashTable[hash].createLinkedList(name, phoneNumber);
+		return 1;
+	}
+	hashTable[hash].addTail(name, phoneNumber);
+	return 1;
 }
+

@@ -26,6 +26,8 @@ public:
 	Node* getNextPointer();
 	int setNextPointer(Node*);
 	Contact* getValue();
+	int setValue(std::string, long);
+	void setNextPointer(std::string, long);
 
 	Node();
 	Node(std::string, long);
@@ -39,22 +41,24 @@ private:
 public:
 	int createLinkedList(std::string, long);
 	int addHead(std::string, long);
+	int addTail(std::string, long);
 	int deleteHead();
 	void printHeadNode();
 	Node* seekHeadNode();
 	Node* seekNode(int);
 	Node* operator[](int);
+	Node* getHeadPointer();
+	int getSize();
 	LinkedList();
 };
 
 class Hash {
 private:
-	LinkedList* arr[50];
-	int size;
-
+	LinkedList hashTable[25];
+	
 public:
 
 	int insert(std::string, long);
-
-	
+	int hashFunction(long);
+	Hash();
 };
