@@ -23,11 +23,12 @@ private:
 public:
 	int createNode(std::string, long);
 	void printInfo();
-	Node* getNextPointer();
+	Node*& getNextPointer();
 	int setNextPointer(Node*);
 	Contact* getValue();
 	int setValue(std::string, long);
 	void setNextPointer(std::string, long);
+
 
 	Node();
 	Node(std::string, long);
@@ -43,12 +44,14 @@ public:
 	int addHead(std::string, long);
 	int addTail(std::string, long);
 	int deleteHead();
+	int deleteTail();
 	void printHeadNode();
 	Node* seekHeadNode();
 	Node* seekNode(int);
 	Node* operator[](int);
 	Node* getHeadPointer();
 	int getSize();
+	void setSize(int value);
 	LinkedList();
 };
 
@@ -59,6 +62,9 @@ private:
 public:
 
 	int insert(std::string, long);
+	bool findKey(std::string, long);
+	Node* findDeleteKey(std::string, long);
+	int deleteKey(std::string, long);
 	int hashFunction(long);
 	Hash();
 };

@@ -49,7 +49,7 @@ void Node::printInfo()
 	std::cout << "Phone number: " << this->contact->getPhoneNumber() << std::endl;
 }
 
-Node* Node::getNextPointer()
+Node*& Node::getNextPointer()
 {
 	return this->pNext;
 }
@@ -57,8 +57,6 @@ Node* Node::getNextPointer()
 void Node::setNextPointer(std::string name, long phoneNumber) {
 	this->pNext = new Node(name, phoneNumber);
 }
-
-
 
 int Node::setNextPointer(Node *pNext)
 {
@@ -130,6 +128,20 @@ int LinkedList::deleteHead() {
 	}
 }
 
+int LinkedList::deleteTail()
+{
+	Node * pTemp = pHead;
+	while (pTemp->getNextPointer()->getNextPointer() != NULL) {
+		pTemp = pTemp->getNextPointer();
+	}
+	Node * pDel = pTemp->getNextPointer();
+	delete pDel;
+	pDel = NULL;
+	pTemp->setNextPointer(NULL);
+	--size;
+	return 1;
+}
+
 void LinkedList::printHeadNode() {
 	pHead->printInfo();
 }
@@ -186,6 +198,11 @@ int LinkedList::getSize()
 	return this->size;
 }
 
+void LinkedList::setSize(int value)
+{
+	this->size = this->size + value;
+}
+
 LinkedList::LinkedList() {
 	pHead = NULL;
 	size = 0;
@@ -213,5 +230,75 @@ int Hash::insert(std::string name, long phoneNumber)
 	}
 	hashTable[hash].addTail(name, phoneNumber);
 	return 1;
+}
+
+bool Hash::findKey(std::string name, long phoneNumber)
+{
+	int hash{ hashFunction(phoneNumber) };
+
+	if (hashTable[hash].getSize() == 0) {
+		return false;
+	}
+
+	Node* pTemp = hashTable[hash].getHeadPointer();
+	while (pTemp != NULL) {
+		if (pTemp->getValue()->getName() == name) {
+			return true;
+		}
+		pTemp = pTemp->getNextPointer();
+	}
+	return false;
+}
+
+Node * Hash::findDeleteKey(std::string name, long phoneNumber)
+{
+	int hash{ hashFunction(phoneNumber) };
+
+	if (hashTable[hash].getSize() == 0) {
+		return NULL;
+	}
+
+	Node* pTemp = hashTable[hash].getHeadPointer();
+	while (pTemp != NULL) {
+		if (pTemp->getValue()->getName() == name) {
+			return pTemp;
+		}
+		pTemp = pTemp->getNextPointer();
+	}
+	return NULL;
+}
+
+int Hash::deleteKey(std::string name, long phoneNumber)
+{
+	if (!findKey(name, phoneNumber)) {
+		return -1;
+	}
+	int hash{ hashFunction(phoneNumber) };
+
+	Node* pTemp{ hashTable[hash].getHeadPointer() };
+	if (pTemp->getValue()->getName() == name) {
+		hashTable[hash].deleteHead();
+		return 1;
+	}
+
+	if (pTemp->getNextPointer()->getNextPointer() == NULL && pTemp->getNextPointer()->getValue()->getName() == name ) {
+		hashTable[hash].deleteTail();
+		return 1;
+	}
+
+	while (pTemp->getNextPointer() != NULL) {
+		if (pTemp->getNextPointer()->getValue()->getName() == name) {
+			Node* pDel = pTemp->getNextPointer();
+			pTemp->setNextPointer(pTemp->getNextPointer()->getNextPointer());
+			delete pDel;
+			pDel = NULL;
+			hashTable[hash].setSize(-1);
+			return 1;
+		}
+		pTemp = pTemp->getNextPointer();
+	}
+
+	
+	
 }
 
