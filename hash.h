@@ -2,21 +2,41 @@
 #include <iostream>
 #pragma once
 
-class Contact {
-private:
+struct Contact {
 	std::string name;
 	long phoneNumber;
 
-public:
+	Contact() {
+		name = "";
+		phoneNumber = 0;
+	}
 
-	std::string getName();
-	long getPhoneNumber();
 	
-	Contact();
-	Contact(std::string, long);
 };
 
-class Node {
+struct Node {
+	Contact contact;
+	Node* pNext;
+
+	Node() {
+		pNext = NULL;
+	}
+
+	Node(std::string name, long phoneNumber) {
+		contact.name = name;
+		contact.phoneNumber = phoneNumber;
+		pNext = NULL;
+	}
+
+	Node(std::string name, long phoneNumber, Node* pNext) {
+		contact.name = name;
+		contact.phoneNumber = phoneNumber;
+		this->pNext = pNext;
+	}
+
+};
+
+/*class Node {
 private:
 	Contact* contact;
 	Node* pNext;
@@ -33,7 +53,7 @@ public:
 	Node();
 	Node(std::string, long);
 	Node(std::string, long, Node*);
-};
+};*/
 
 class LinkedList {
 private:
@@ -45,7 +65,7 @@ public:
 	int addTail(std::string, long);
 	int deleteHead();
 	int deleteTail();
-	void printHeadNode();
+	//void printHeadNode();
 	Node* seekHeadNode();
 	Node* seekNode(int);
 	Node* operator[](int);
@@ -57,7 +77,7 @@ public:
 
 class Hash {
 private:
-	LinkedList hashTable[25];
+	LinkedList hashTable[5];
 	
 public:
 

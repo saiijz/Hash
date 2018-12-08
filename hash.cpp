@@ -1,42 +1,7 @@
 #include "hash.h"
 
-/* Contact class code block*/
-
-std::string Contact::getName()
-{
-	return this->name;
-}
-
-long Contact::getPhoneNumber()
-{
-	return this->phoneNumber;
-}
-
-Contact* Node::getValue()
-{
-	return this->contact;
-}
-
-int Node::setValue(std::string name, long phoneNumber)
-{
-	this->contact = new Contact(name, phoneNumber);
-	this->pNext = NULL;
-	return 1;
-}
-
-Contact::Contact()
-{
-	this->name = "NULL";
-	this->phoneNumber = 0;
-}
-
-Contact::Contact(std::string name, long phoneNumber) {
-	this->name = name;
-	this->phoneNumber = phoneNumber;
-}
-
 /* node class code block */
-
+/*
 int Node::createNode(std::string name, long phoneNumber)
 {
 	*this = Node(name, phoneNumber);
@@ -82,7 +47,7 @@ Node::Node(std::string name, long phoneNumber, Node* pNext)
 	this->pNext = pNext;
 }
 
-
+*/
 
 /*LinkedList class code block*/
 
@@ -119,8 +84,8 @@ int LinkedList::deleteHead() {
 	}
 	else {
 		Node* pDel = pHead;
-		pHead = pHead->getNextPointer();
-		pDel->setNextPointer(NULL);
+		pHead = pHead->pNext;
+		pDel->pNext = NULL;
 		delete pDel;
 		pDel = NULL;
 		--size;
@@ -131,20 +96,21 @@ int LinkedList::deleteHead() {
 int LinkedList::deleteTail()
 {
 	Node * pTemp = pHead;
-	while (pTemp->getNextPointer()->getNextPointer() != NULL) {
-		pTemp = pTemp->getNextPointer();
+	while (pTemp->pNext->pNext != NULL) {
+		pTemp = pTemp->pNext;
 	}
-	Node * pDel = pTemp->getNextPointer();
+	Node * pDel = pTemp->pNext;
 	delete pDel;
 	pDel = NULL;
-	pTemp->setNextPointer(NULL);
+	pTemp->pNext = NULL;
 	--size;
 	return 1;
 }
-
+/*
 void LinkedList::printHeadNode() {
 	pHead->printInfo();
 }
+*/
 
 Node* LinkedList::seekHeadNode() {
 	return pHead;
@@ -160,7 +126,7 @@ Node* LinkedList::seekNode(int index) {
 	else {
 		Node *pTemp{ pHead };
 		for (int i{ 0 }; i < index; i++) {
-			pTemp = pTemp->getNextPointer();
+			pTemp = pTemp->pNext;
 		}
 		return pTemp;
 	}
@@ -173,17 +139,17 @@ Node* LinkedList::operator[](int index) {
 	}
 	Node* pTemp = this->pHead;
 	for (int i{ 0 }; i < index; i++) {
-		pTemp = pTemp->getNextPointer();
+		pTemp = pTemp->pNext;
 	}
 	return pTemp;
 }
 
 int LinkedList::addTail(std::string name, long phoneNumber) {
 	Node * pTemp = pHead;
-	while (pTemp->getNextPointer() != NULL) {
-		pTemp = pTemp->getNextPointer();
+	while (pTemp->pNext != NULL) {
+		pTemp = pTemp->pNext;
 	}
-	pTemp->setNextPointer(name, phoneNumber);
+	pTemp->pNext = new Node(name, phoneNumber);
 	++size;
 	return 1;
 }
@@ -242,10 +208,10 @@ bool Hash::findKey(std::string name, long phoneNumber)
 
 	Node* pTemp = hashTable[hash].getHeadPointer();
 	while (pTemp != NULL) {
-		if (pTemp->getValue()->getName() == name) {
+		if (pTemp->contact.name == name) {
 			return true;
 		}
-		pTemp = pTemp->getNextPointer();
+		pTemp = pTemp->pNext;
 	}
 	return false;
 }
@@ -260,10 +226,10 @@ Node * Hash::findDeleteKey(std::string name, long phoneNumber)
 
 	Node* pTemp = hashTable[hash].getHeadPointer();
 	while (pTemp != NULL) {
-		if (pTemp->getValue()->getName() == name) {
+		if (pTemp->contact.name == name) {
 			return pTemp;
 		}
-		pTemp = pTemp->getNextPointer();
+		pTemp = pTemp->pNext;
 	}
 	return NULL;
 }
@@ -276,29 +242,25 @@ int Hash::deleteKey(std::string name, long phoneNumber)
 	int hash{ hashFunction(phoneNumber) };
 
 	Node* pTemp{ hashTable[hash].getHeadPointer() };
-	if (pTemp->getValue()->getName() == name) {
+	if (pTemp->contact.name == name) {
 		hashTable[hash].deleteHead();
 		return 1;
 	}
 
-	if (pTemp->getNextPointer()->getNextPointer() == NULL && pTemp->getNextPointer()->getValue()->getName() == name ) {
+	if (pTemp->pNext->pNext == NULL && pTemp->pNext->contact.name == name ) {
 		hashTable[hash].deleteTail();
 		return 1;
 	}
 
-	while (pTemp->getNextPointer() != NULL) {
-		if (pTemp->getNextPointer()->getValue()->getName() == name) {
-			Node* pDel = pTemp->getNextPointer();
-			pTemp->setNextPointer(pTemp->getNextPointer()->getNextPointer());
+	while (pTemp->pNext != NULL) {
+		if (pTemp->pNext->contact.name == name) {
+			Node* pDel = pTemp->pNext;
+			pTemp->pNext = pTemp->pNext->pNext;
 			delete pDel;
 			pDel = NULL;
 			hashTable[hash].setSize(-1);
 			return 1;
 		}
-		pTemp = pTemp->getNextPointer();
+		pTemp = pTemp->pNext;
 	}
-
-	
-	
 }
-
