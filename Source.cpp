@@ -13,6 +13,7 @@ int main() {
 	table.insert("a1", 1);
 	table.insert("a2", 1);
 	table.insert("a3", 6);
+	
 	table.deleteKey("itsupport", 969430396);
 	table.deleteKey("a1", 1);
 	table.deleteKey("a3", 6);
